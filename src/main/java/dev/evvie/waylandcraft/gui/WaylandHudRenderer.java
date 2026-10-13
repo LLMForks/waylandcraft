@@ -19,7 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
@@ -43,19 +43,19 @@ public class WaylandHudRenderer {
 		HudElementRegistry.attachElementAfter(VanillaHudElements.BOSS_BAR, DND_ICON, this::extractDNDIconRenderState);
 	}
 	
-	private void extractAppListRenderState(GuiGraphicsExtractor context, DeltaTracker deltaTracker) {
+	private void extractAppListRenderState(GuiGraphics context, DeltaTracker deltaTracker) {
 		Font font = Minecraft.getInstance().font;
 		int yoff = 30;
 		int ystep = font.lineHeight + 2;
 		
 		if(WaylandCraft.instance.keyboardCaptureMode == KeyboardCaptureMode.CAPTURE) {
 			String text = "KEYBOARD CAPTURED [PRESS ESCAPE]";
-			context.text(font, text, context.guiWidth() - font.width(text) - 10, yoff, Color.red.getRGB(), true);
+			context.drawString(font, text, context.guiWidth() - font.width(text) - 10, yoff, Color.red.getRGB(), true);
 			yoff += ystep;
 		}
 		else if(WaylandCraft.instance.keyboardCaptureMode == KeyboardCaptureMode.HARD_CAPTURE) {
 			String text = "KEYBOARD CAPTURED [PRESS ALT+Q]";
-			context.text(font, text, context.guiWidth() - font.width(text) - 10, yoff, Color.red.getRGB(), true);
+			context.drawString(font, text, context.guiWidth() - font.width(text) - 10, yoff, Color.red.getRGB(), true);
 			yoff += ystep;
 		}
 		
@@ -78,7 +78,7 @@ public class WaylandHudRenderer {
 			}
 			
 			int x = context.guiWidth() - font.width(name) - 10;
-			context.text(font, Component.literal(name).withStyle(style), x, yoff, color.getRGB(), true);
+			context.drawString(font, Component.literal(name).withStyle(style), x, yoff, color.getRGB(), true);
 			
 			if(entry != null) {
 				Identifier icon = entry.getIcon();
@@ -92,7 +92,7 @@ public class WaylandHudRenderer {
 		}
 	}
 	
-	private void extractPinnedToplevelRenderState(GuiGraphicsExtractor context, DeltaTracker deltaTracker) {
+	private void extractPinnedToplevelRenderState(GuiGraphics context, DeltaTracker deltaTracker) {
 		int guiScale = (int) Minecraft.getInstance().getWindow().getGuiScale();
 		
 		if(wlc.pinnedToplevel != null && !wlc.pinnedToplevel.isAlive()) wlc.pinnedToplevel = null;
@@ -115,7 +115,7 @@ public class WaylandHudRenderer {
 		}
 	}
 	
-	private void extractDNDIconRenderState(GuiGraphicsExtractor context, DeltaTracker tracker) {
+	private void extractDNDIconRenderState(GuiGraphics context, DeltaTracker tracker) {
 		int guiScale = (int) Minecraft.getInstance().getWindow().getGuiScale();
 		
 		if(wlc.dndIcon == null) return;
@@ -140,11 +140,11 @@ public class WaylandHudRenderer {
 		stack.popMatrix();
 	}
 	
-	private void extractTimeDateRenderState(GuiGraphicsExtractor context, DeltaTracker deltaTracker) {
+	private void extractTimeDateRenderState(GuiGraphics context, DeltaTracker deltaTracker) {
 		Font font = Minecraft.getInstance().font;
 		String datetime = String.format("%1$tF %1$tR", Calendar.getInstance());
 		
-		context.text(font, datetime, context.guiWidth() - font.width(datetime) - 2, 2, Color.white.getRGB(), true);
+		context.drawString(font, datetime, context.guiWidth() - font.width(datetime) - 2, 2, Color.white.getRGB(), true);
 	}
 	
 }

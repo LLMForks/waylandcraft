@@ -1,15 +1,16 @@
 {
 	"required": true,
 	"package": "dev.evvie.waylandcraft.mixin",
-	"compatibilityLevel": "JAVA_25",
+	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"MouseHandlerMixin",
-		"GlBackendMixin",
+		"WindowMixin",
 		"KeyboardHandlerMixin",
 		"IMouseHandlerMixin",
 		"ItemInHandRendererMixin",
 		"IItemInHandRendererMixin",
 		"MinecraftMixin",
+		"GameRendererMixin",
 		"GuiMixin",
 		"INativeImageMixin",
 		"ItemFrameRendererMixin",

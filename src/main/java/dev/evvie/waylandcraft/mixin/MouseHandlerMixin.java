@@ -44,7 +44,7 @@ public class MouseHandlerMixin {
 	
 	@WrapOperation(method = "grabMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;setAll()V"))
 	private void stopSetAllKeys(Operation<Void> original) {
-		if(!WaylandCraft.PointerCaptureOverlay.STOP_KEYMAPPING_SET_ALL.isBound()) original.call();
+		if(!WaylandCraft.PointerCaptureOverlay.STOP_KEYMAPPING_SET_ALL.get()) original.call();
 	}
 	
 	@Shadow public double accumulatedDX;

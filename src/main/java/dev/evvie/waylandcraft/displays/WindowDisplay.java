@@ -15,7 +15,7 @@ import dev.evvie.waylandcraft.math.WorldPlane;
 import dev.evvie.waylandcraft.render.RenderUtils;
 import dev.evvie.waylandcraft.render.WindowFramebuffer;
 import dev.evvie.waylandcraft.utils.WaylandCraftUtils;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -60,11 +60,11 @@ public class WindowDisplay extends AbstractWindowDisplay {
 	}
 	
 	@Override
-	public void render(LevelRenderContext ctx) {
+	public void render(WorldRenderContext ctx) {
 		super.render(ctx);
 		
-		Vec3 cameraPos = ctx.levelState().cameraRenderState.pos;
-		PoseStack poseStack = ctx.poseStack();
+		Vec3 cameraPos = ctx.worldState().cameraRenderState.pos;
+		PoseStack poseStack = ctx.matrices();
 		poseStack.pushPose();
 		poseStack.translate(cameraPos.scale(-1));
 		if(WaylandCraft.instance.pointerGrabs.activeExclusiveGrab() instanceof MoveGrab grab && grab.window == this && grab.snapActive) {
@@ -73,12 +73,12 @@ public class WindowDisplay extends AbstractWindowDisplay {
 					grab.initialPivot.add(right().scale(10)),
 					grab.initialPivot.add(right().scale(-10)),
 			};
-			RenderUtils.renderLineStrip(ctx.poseStack(), ctx.submitNodeCollector(), points, ARGB.color(255, 0, 0), 2.0f);
+			RenderUtils.renderLineStrip(ctx.matrices(), ctx.commandQueue(), points, ARGB.color(255, 0, 0), 2.0f);
 			points = new Vec3[] {
 					grab.initialPivot.add(down().scale(10)),
 					grab.initialPivot.add(down().scale(-10)),
 			};
-			RenderUtils.renderLineStrip(ctx.poseStack(), ctx.submitNodeCollector(), points, ARGB.color(255, 0, 0), 2.0f);
+			RenderUtils.renderLineStrip(ctx.matrices(), ctx.commandQueue(), points, ARGB.color(255, 0, 0), 2.0f);
 		}
 		poseStack.popPose();
 	}

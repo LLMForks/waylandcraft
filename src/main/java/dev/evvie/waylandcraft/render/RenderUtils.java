@@ -7,9 +7,8 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.AddressMode;
 import com.mojang.blaze3d.textures.FilterMode;
@@ -22,7 +21,8 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 
 import dev.evvie.waylandcraft.WaylandCraftCommon;
 import dev.evvie.waylandcraft.compat.IrisCompat;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeCollector.CustomGeometryRenderer;
@@ -32,7 +32,6 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Util;
 import net.minecraft.world.phys.Vec3;
 
@@ -42,7 +41,8 @@ public class RenderUtils {
 			.withVertexShader(Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "core/rendertype_window"))
 			.withFragmentShader(Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "core/rendertype_window"))
 			.withSampler("Sampler0")
-			.withDepthStencilState(DepthStencilState.DEFAULT)
+			.withDepthTestFunction(DepthTestFunction.LEQUAL_DEPTH_TEST)
+			.withDepthWrite(true)
 			.withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
 			.buildSnippet();
 	
@@ -53,7 +53,7 @@ public class RenderUtils {
 	
 	private static final RenderPipeline WINDOW_TRANSLUCENT_PIPELINE = RenderPipeline.builder(WINDOW_PIPELINE_SNIPPET)
 			.withLocation(Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "pipeline/window_translucent"))
-			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+			.withBlend(BlendFunction.TRANSLUCENT)
 			.build();
 	
 	private static final RenderPipeline WINDOW_CUTOUT_ANTIALIASING_PIPELINE = RenderPipeline.builder(WINDOW_PIPELINE_SNIPPET)
@@ -64,7 +64,7 @@ public class RenderUtils {
 	
 	private static final RenderPipeline WINDOW_TRANSLUCENT_ANTIALIASING_PIPELINE = RenderPipeline.builder(WINDOW_PIPELINE_SNIPPET)
 			.withLocation(Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "pipeline/window_translucent"))
-			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+			.withBlend(BlendFunction.TRANSLUCENT)
 			.withShaderDefine("RGSS")
 			.build();
 	
@@ -77,7 +77,7 @@ public class RenderUtils {
 	private static final RenderPipeline WINDOW_TRANSLUCENT_BACKGROUND_PIPELINE = RenderPipeline.builder(WINDOW_PIPELINE_SNIPPET)
 			.withLocation(Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "pipeline/window_translucent_background"))
 			.withShaderDefine("NO_COLOR")
-			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+			.withBlend(BlendFunction.TRANSLUCENT)
 			.build();
 	
 	public static final Supplier<GpuSampler> WINDOW_SAMPLER = () -> RenderSystem.getSamplerCache().getSampler(AddressMode.CLAMP_TO_EDGE, AddressMode.CLAMP_TO_EDGE, FilterMode.LINEAR, FilterMode.NEAREST, false);
@@ -140,12 +140,12 @@ public class RenderUtils {
 		if(!framebuffer.isValid()) return;
 		
 		if(IrisCompat.isShaderActive()) {
-			int light = LightCoordsUtil.FULL_SKY;
+			int light = LightTexture.FULL_SKY;
 			int colorFront = ARGB.white(1.0f);
 			int colorBack = ARGB.black(1.0f);
 			
-			collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(framebuffer.getTextureLocation()), new FramebufferRenderInstanceEntity(origin, spanX, spanY, colorFront, OverlayTexture.NO_OVERLAY, light, false));
-			collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(framebuffer.getTextureLocation()), new FramebufferRenderInstanceEntity(origin, spanX, spanY, colorBack, OverlayTexture.NO_OVERLAY, light, true));
+			collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(framebuffer.getTextureLocation()), new FramebufferRenderInstanceEntity(origin, spanX, spanY, colorFront, OverlayTexture.NO_OVERLAY, light, false));
+			collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(framebuffer.getTextureLocation()), new FramebufferRenderInstanceEntity(origin, spanX, spanY, colorBack, OverlayTexture.NO_OVERLAY, light, true));
 			return;
 		}
 		
@@ -221,7 +221,7 @@ public class RenderUtils {
 		
 	}
 	
-	public static void renderFramebuffer2D(GuiGraphicsExtractor context, WindowFramebuffer framebuffer, int x, int y, int w, int h) {
+	public static void renderFramebuffer2D(GuiGraphics context, WindowFramebuffer framebuffer, int x, int y, int w, int h) {
 		if(!framebuffer.isValid()) return;
 		context.blit(framebuffer.getTextureLocation(), x, y, x + w, y + h, 0.0f, 1.0f, 0.0f, 1.0f);
 	}

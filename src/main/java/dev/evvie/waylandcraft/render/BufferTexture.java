@@ -15,7 +15,7 @@ import com.mojang.blaze3d.opengl.GlTexture;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.GpuDeviceBackend;
+import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
@@ -51,7 +51,7 @@ public abstract class BufferTexture {
 	public abstract void release();
 	
 	public static BufferTexture createShmTexture(long ptr, int width, int height, int format, int stride) {
-		GpuDeviceBackend deviceBackend = RenderSystem.getDevice().backend;
+		GpuDevice deviceBackend = RenderSystem.getDevice();
 		if(deviceBackend instanceof GlDevice) {
 			return new GlShmBufferTexture(ptr, width, height, format, stride);
 		}
@@ -64,7 +64,7 @@ public abstract class BufferTexture {
 	}
 	
 	public static @Nullable DmabufTexture createDmabufTexture(Dmabuf dmabuf) {
-		GpuDeviceBackend deviceBackend = RenderSystem.getDevice().backend;
+		GpuDevice deviceBackend = RenderSystem.getDevice();
 		try {
 			if(deviceBackend instanceof GlDevice) {
 				return new GlDmabufTexture(dmabuf);

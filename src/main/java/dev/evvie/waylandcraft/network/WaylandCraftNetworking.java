@@ -10,8 +10,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 public class WaylandCraftNetworking {
 	
 	public static void register() {
-		PayloadTypeRegistry.serverboundPlay().register(ServerboundGiveItemsPayload.TYPE, ServerboundGiveItemsPayload.CODEC);
-		PayloadTypeRegistry.serverboundPlay().register(ServerboundAliveWindowsPayload.TYPE, ServerboundAliveWindowsPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(ServerboundGiveItemsPayload.TYPE, ServerboundGiveItemsPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(ServerboundAliveWindowsPayload.TYPE, ServerboundAliveWindowsPayload.CODEC);
 		
 		ServerPlayNetworking.registerGlobalReceiver(ServerboundAliveWindowsPayload.TYPE, (payload, ctx) -> {
 			IMyServerPlayer plr = (IMyServerPlayer) ctx.player();

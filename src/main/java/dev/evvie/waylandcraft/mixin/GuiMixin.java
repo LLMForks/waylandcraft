@@ -15,7 +15,7 @@ import dev.evvie.waylandcraft.WaylandCraftCommon;
 import dev.evvie.waylandcraft.utils.CursorShape;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
 
 @Mixin(Gui.class)
@@ -35,16 +35,16 @@ public class GuiMixin {
 	private static final Identifier ZOOM_IN_CROSSHAIR = Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "crosshair/zoom_in");
 	private static final Identifier ZOOM_OUT_CROSSHAIR = Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "crosshair/zoom_out");
 	
-	@WrapOperation(method = "extractCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 0))
-	private void changeCrosshairSprite(GuiGraphicsExtractor context, RenderPipeline pipeline, Identifier originalSprite, int x, int y, int width, int height, Operation<Void> original) {
+	@WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 0))
+	private void changeCrosshairSprite(GuiGraphics context, RenderPipeline pipeline, Identifier originalSprite, int x, int y, int width, int height, Operation<Void> original) {
 		Identifier sprite = crosshairForCursor(WaylandCraft.instance.cursorShape);
 		
 		if(sprite != null) original.call(context, pipeline, sprite, x, y, width, height);
 		else original.call(context, pipeline, originalSprite, x, y, width, height);
 	}
 	
-	@Inject(method = "extractCrosshair", at = @At("HEAD"), cancellable = true)
-	public void crosshairExtractCancel(GuiGraphicsExtractor context, DeltaTracker tracker, CallbackInfo info) {
+	@Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
+	public void crosshairExtractCancel(GuiGraphics context, DeltaTracker tracker, CallbackInfo info) {
 		if(WaylandCraft.instance.cursorShape == CursorShape.HIDE) info.cancel();
 	}
 	

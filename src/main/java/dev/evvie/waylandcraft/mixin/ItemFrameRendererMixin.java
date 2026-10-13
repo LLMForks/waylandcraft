@@ -37,7 +37,7 @@ public class ItemFrameRendererMixin {
 		((IMyItemFrameRenderState) renderState).setToplevel(toplevel);
 	}
 	
-	@ModifyArg(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/BlockModelResolver;updateForItemFrame(Lnet/minecraft/client/renderer/block/BlockModelRenderState;ZZ)V"), index = 2)
+	@ModifyArg(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BlockStateDefinitions;getItemFrameFakeState(ZZ)Lnet/minecraft/world/level/block/state/BlockState;"), index = 1)
 	private boolean changeModelWithWindowItem(boolean isMap, @Local ItemFrameRenderState renderState) {
 		return ((IMyItemFrameRenderState) renderState).getToplevel() != null ? true : isMap;
 	}

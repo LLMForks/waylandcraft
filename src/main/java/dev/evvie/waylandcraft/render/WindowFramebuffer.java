@@ -11,9 +11,9 @@ import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.buffers.Std140Builder;
 import com.mojang.blaze3d.buffers.Std140SizeCalculator;
 import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.shaders.UniformType;
@@ -52,7 +52,9 @@ public class WindowFramebuffer implements FramebufferRenderable {
 		.withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
 		.withSampler("Sampler0")
 		.withUniform("WindowInfo", UniformType.UNIFORM_BUFFER)
-		.withColorTargetState(new ColorTargetState(new BlendFunction(SourceFactor.ONE, DestFactor.ONE_MINUS_SRC_ALPHA)))
+		.withBlend(new BlendFunction(SourceFactor.ONE, DestFactor.ONE_MINUS_SRC_ALPHA))
+		.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+		.withDepthWrite(false)
 		.withCull(false)
 		.build()
 	);
@@ -63,7 +65,9 @@ public class WindowFramebuffer implements FramebufferRenderable {
 		.withVertexShader("core/screenquad")
 		.withFragmentShader(Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "unpremultiply"))
 		.withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
-		.withColorTargetState(ColorTargetState.DEFAULT)
+		.withoutBlend()
+		.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+		.withDepthWrite(false)
 		.withSampler("Sampler0")
 		.build()
 	);
@@ -75,7 +79,9 @@ public class WindowFramebuffer implements FramebufferRenderable {
 		.withFragmentShader(Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "window_damage"))
 		.withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
 		.withUniform("WindowInfo", UniformType.UNIFORM_BUFFER)
-		.withColorTargetState(new ColorTargetState(new BlendFunction(SourceFactor.ONE, DestFactor.ONE_MINUS_SRC_ALPHA)))
+		.withBlend(new BlendFunction(SourceFactor.ONE, DestFactor.ONE_MINUS_SRC_ALPHA))
+		.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+		.withDepthWrite(false)
 		.withCull(false)
 		.build()
 	);

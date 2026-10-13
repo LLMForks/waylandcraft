@@ -7,12 +7,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.blaze3d.opengl.GlBackend;
+import com.mojang.blaze3d.platform.Window;
 
-@Mixin(GlBackend.class)
-public class GlBackendMixin {
+@Mixin(Window.class)
+public class WindowMixin {
 	
-	@Inject(method = "setWindowHints", at = @At("TAIL"))
+	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwCreateWindow(IILjava/lang/CharSequence;JJ)J", remap = false))
 	public void changeContextApi(CallbackInfo info) {
 		if(Platform.get() != Platform.LINUX) return;
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_CREATION_API, GLFW.GLFW_EGL_CONTEXT_API);

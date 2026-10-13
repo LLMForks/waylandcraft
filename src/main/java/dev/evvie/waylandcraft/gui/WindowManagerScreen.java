@@ -25,7 +25,7 @@ import dev.evvie.waylandcraft.render.RenderUtils;
 import dev.evvie.waylandcraft.render.WindowFramebuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageWidget;
 import net.minecraft.client.gui.components.PopupScreen;
@@ -230,7 +230,7 @@ public class WindowManagerScreen extends Screen {
 				disabling all of the other UI elements.
 				""";
 		minecraft.setScreen(new PopupScreen.Builder(this, Component.literal("Window Manager Help"))
-				.addMessage(Component.literal(message))
+				.setMessage(Component.literal(message))
 				.addButton(Component.literal("Done"), (popup) -> popup.onClose())
 				.build());
 	}
@@ -262,10 +262,10 @@ public class WindowManagerScreen extends Screen {
 	}
 	
 	@Override
-	public void extractRenderState(GuiGraphicsExtractor context, int i, int j, float f) {
-		super.extractBlurredBackground(context);
+	public void render(GuiGraphics context, int i, int j, float f) {
+		super.renderBlurredBackground(context);
 		
-		context.outline(leftMargin - 1, topMargin - 1, areaWidth + 2, areaHeight + 2, Color.white.getRGB());
+		context.renderOutline(leftMargin - 1, topMargin - 1, areaWidth + 2, areaHeight + 2, Color.white.getRGB());
 		
 		guiScale = (int) Minecraft.getInstance().getWindow().getGuiScale();
 		wlc.bridge.setOutputBounds(areaWidth * guiScale, areaHeight * guiScale);
@@ -364,11 +364,11 @@ public class WindowManagerScreen extends Screen {
 			captureModeSprite.visible = true;
 		}
 		
-		super.extractRenderState(context, i, j, f);
+		super.render(context, i, j, f);
 	}
 	
 	@Override
-	public void extractBackground(GuiGraphicsExtractor guiGraphics, int i, int j, float f) {
+	public void renderBackground(GuiGraphics guiGraphics, int i, int j, float f) {
 	}
 	
 	private HoveredSurface surfaceUnderPointer(double x, double y) {

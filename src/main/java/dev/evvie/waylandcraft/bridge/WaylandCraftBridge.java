@@ -13,7 +13,7 @@ import org.jspecify.annotations.NonNull;
 import org.lwjgl.system.Platform;
 
 import com.mojang.blaze3d.opengl.GlDevice;
-import com.mojang.blaze3d.systems.GpuDeviceBackend;
+import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import dev.evvie.waylandcraft.WaylandCraftCommon;
@@ -121,7 +121,7 @@ public class WaylandCraftBridge {
 	}
 	
 	private static DmabufFeedbackData initBackend() {
-		GpuDeviceBackend deviceBackend = RenderSystem.getDevice().backend;
+		GpuDevice deviceBackend = RenderSystem.getDevice();
 		if(deviceBackend instanceof GlDevice) {
 			return initBackendEGL();
 		}

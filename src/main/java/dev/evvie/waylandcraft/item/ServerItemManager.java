@@ -16,7 +16,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class ServerItemManager implements ServerTickEvents.StartLevelTick {
+public class ServerItemManager implements ServerTickEvents.StartWorldTick {
 	
 	@Override
 	public void onStartTick(ServerLevel level) {

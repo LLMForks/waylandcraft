@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import dev.evvie.waylandcraft.math.WorldPlane;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.phys.Vec3;
 
@@ -83,7 +83,7 @@ public abstract class AbstractWindowDisplay {
 		pivot = pos.add(localX().scale(width/2)).add(localY().scale(height/2));
 	}
 	
-	public void render(LevelRenderContext ctx) {
+	public void render(WorldRenderContext ctx) {
 		FramebufferRenderable framebuffer = getFramebuffer();
 		if(framebuffer == null) return;
 		
@@ -97,15 +97,15 @@ public abstract class AbstractWindowDisplay {
 		Vec3 localX = localX();
 		Vec3 localY = localY();
 		
-		Vec3 cameraPos = ctx.levelState().cameraRenderState.pos;
+		Vec3 cameraPos = ctx.worldState().cameraRenderState.pos;
 		Vec3 originRel = origin().subtract(cameraPos);
 		
 		Vec3 bufOffset = localX.scale(-xoff - geometryX).add(localY.scale(-yoff - geometryY));
 		
-		PoseStack poseStack = ctx.poseStack();
+		PoseStack poseStack = ctx.matrices();
 		poseStack.pushPose();
 		poseStack.translate(originRel.x, originRel.y, originRel.z);
-		renderFramebuffer(poseStack, ctx.submitNodeCollector(), bufOffset, localX.scale(bufWidth), localY.scale(bufHeight));
+		renderFramebuffer(poseStack, ctx.commandQueue(), bufOffset, localX.scale(bufWidth), localY.scale(bufHeight));
 		poseStack.popPose();
 	}
 	

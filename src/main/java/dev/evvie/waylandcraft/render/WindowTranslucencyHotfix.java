@@ -1,10 +1,9 @@
 package dev.evvie.waylandcraft.render;
 
-import java.util.Optional;
 import java.util.OptionalInt;
 
-import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -22,7 +21,10 @@ public class WindowTranslucencyHotfix {
 			.withLocation(Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "pipeline/translucency_hotfix"))
 			.withVertexShader("core/screenquad")
 			.withFragmentShader(Identifier.fromNamespaceAndPath(WaylandCraftCommon.MOD_ID, "core/singlecolor"))
-			.withColorTargetState(new ColorTargetState(Optional.empty(), ColorTargetState.WRITE_ALPHA))
+			.withoutBlend()
+			.withColorWrite(false, true)
+			.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+			.withDepthWrite(false)
 			.withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
 			.withShaderDefine("RED", 1.0f)
 			.withShaderDefine("GREEN", 1.0f)

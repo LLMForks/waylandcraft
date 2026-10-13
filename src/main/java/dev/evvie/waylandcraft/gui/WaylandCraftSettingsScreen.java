@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import dev.evvie.waylandcraft.WaylandCraft;
 import dev.evvie.waylandcraft.settings.WaylandCraftSettings;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ScrollableLayout;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.FrameLayout;
@@ -41,6 +41,8 @@ public class WaylandCraftSettingsScreen extends Screen {
 		}
 		
 		layout = new ScrollableLayout(minecraft, content, height - 75);
+		// In 1.21.11 the constructor only sets the initial height, the maximum height has to be set explicitly
+		layout.setMaxHeight(height - 75);
 		layout.setPosition(width / 2 - SettingsWidget.WIDTH / 2 - 25 / 2, 50);
 		layout.arrangeElements();
 		layout.visitWidgets((w) -> addRenderableWidget(w));
@@ -54,8 +56,8 @@ public class WaylandCraftSettingsScreen extends Screen {
 	}
 	
 	@Override
-	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-		super.extractRenderState(graphics, mouseX, mouseY, a);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float a) {
+		super.render(graphics, mouseX, mouseY, a);
 	}
 	
 	@Override

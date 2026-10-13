@@ -26,7 +26,7 @@ public class WaylandCraftCommon implements ModInitializer {
 		WindowItem.register();
 		WaylandCraftNetworking.register();
 		
-		ServerTickEvents.START_LEVEL_TICK.register(serverItemManager);
+		ServerTickEvents.START_WORLD_TICK.register(serverItemManager);
 	}
 	
 }

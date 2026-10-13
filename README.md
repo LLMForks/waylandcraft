@@ -8,7 +8,7 @@ Now available on [Modrinth](https://modrinth.com/mod/waylandcraft)!
 
 ## System dependencies
 - OS: Linux
-- Minecraft 26.1.2
+- Minecraft 1.21.11
 - Fabric mod loader
 - xkbcommon library 1.11.0
 - xkbcommon tools (xkbcli)
@@ -25,7 +25,7 @@ Additionally recommended:
 
 ## Frequently Asked Questions
 ### How do I use this thing?
-Download the mod from the releases section, install Minecraft Fabric for 26.1.2 and drag the jar file in your mods folder.
+Download the mod from the releases section, install Minecraft Fabric for 1.21.11 and drag the jar file in your mods folder.
 Look at your keybind settings. By default `V` opens the app launcher, `G` enables keyboard capture allowing you to type in
 the windows, `B` opens the window manager screen.
 
@@ -65,7 +65,7 @@ This is because for the shader support windows are rendered with the same pipeli
 For some shaders you might need to disable features like Temporal Anti Aliasing (TAA).
 
 ## Building and Running
-You need a Rust development environment and a Java 25 SDK.
+You need a Rust development environment and a Java 21 SDK.
 ```sh
 ./build.sh #all arguments are passed to cargo build
 ```

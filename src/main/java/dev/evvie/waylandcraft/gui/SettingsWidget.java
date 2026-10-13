@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 import dev.evvie.waylandcraft.WaylandCraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -53,7 +53,7 @@ public class SettingsWidget extends AbstractWidget {
 	}
 	
 	@Override
-	protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+	protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float a) {
 		Font font = Minecraft.getInstance().font;
 		
 		int x = getX();
@@ -66,7 +66,7 @@ public class SettingsWidget extends AbstractWidget {
 		graphics.fill(x, y, x + width, y + height, ARGB.black(0.25f));
 		
 		graphics.enableScissor(x, y, x + width - totalElementWidth - textPad, y + height);
-		graphics.text(font, message, x + textPad, y + textPad, ARGB.white(1.0f), active);
+		graphics.drawString(font, message, x + textPad, y + textPad, ARGB.white(1.0f), active);
 		graphics.disableScissor();
 		
 		int elemPad = 5;
@@ -168,7 +168,7 @@ public class SettingsWidget extends AbstractWidget {
 			return x <= testX && testX <= x + width && y <= testY && testY <= y + height;
 		}
 		
-		public abstract void extractControlElement(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a);
+		public abstract void extractControlElement(GuiGraphics graphics, int mouseX, int mouseY, float a);
 		public abstract void saveValue();
 		public void onClick(int mouseX, int mouseY, MouseButtonInfo buttonInfo) {}
 		public void onDoubleClick() {}
@@ -217,7 +217,7 @@ public class SettingsWidget extends AbstractWidget {
 		}
 		
 		@Override
-		public void extractControlElement(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		public void extractControlElement(GuiGraphics graphics, int mouseX, int mouseY, float a) {
 			int x = getX();
 			int y = getY();
 			int width = getWidth();
@@ -227,8 +227,8 @@ public class SettingsWidget extends AbstractWidget {
 			Component text = getValue() ? Component.literal("ON") : Component.literal("OFF");
 			
 			graphics.fill(x, y, x + width, y + height, ARGB.black(0.6f));
-			graphics.outline(x, y, width, height, ARGB.gray(isFocused() ? 1.0f : 0.5f));
-			graphics.text(font, text, x + width / 2 - font.width(text) / 2, y + height / 2 - font.lineHeight / 2, ARGB.white(1.0f));
+			graphics.renderOutline(x, y, width, height, gray(isFocused() ? 1.0f : 0.5f));
+			graphics.drawString(font, text, x + width / 2 - font.width(text) / 2, y + height / 2 - font.lineHeight / 2, ARGB.white(1.0f));
 		}
 		
 		@Override
@@ -264,7 +264,7 @@ public class SettingsWidget extends AbstractWidget {
 		}
 		
 		@Override
-		public void extractControlElement(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		public void extractControlElement(GuiGraphics graphics, int mouseX, int mouseY, float a) {
 			int x = getX();
 			int y = getY();
 			int width = getWidth();
@@ -279,14 +279,14 @@ public class SettingsWidget extends AbstractWidget {
 			Component text = Component.literal(str);
 			
 			graphics.fill(x, y, x + width, y + height, ARGB.black(0.6f));
-			graphics.outline(x, y, width, height, ARGB.gray(isFocused() ? 1.0f : 0.5f));
+			graphics.renderOutline(x, y, width, height, gray(isFocused() ? 1.0f : 0.5f));
 			
 			int textWidth = font.width(text);
 			int textHeight = font.lineHeight;
 			int textX = x + width / 2 - textWidth / 2;
 			int textY = y + height / 2 - textHeight / 2;
 			
-			graphics.text(font, text, textX, textY, ARGB.white(1.0f));
+			graphics.drawString(font, text, textX, textY, ARGB.white(1.0f));
 		}
 		
 		private void stopEntry() {
@@ -370,8 +370,8 @@ public class SettingsWidget extends AbstractWidget {
 		}
 		
 		@Override
-		public void extractControlElement(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-			editBox.extractRenderState(graphics, mouseX, mouseY, a);
+		public void extractControlElement(GuiGraphics graphics, int mouseX, int mouseY, float a) {
+			editBox.render(graphics, mouseX, mouseY, a);
 		}
 		
 		@Override
@@ -416,6 +416,12 @@ public class SettingsWidget extends AbstractWidget {
 			return editBox.charTyped(event);
 		}
 		
+	}
+	
+	// Equivalent of ARGB.gray(float), which does not exist in 1.21.11
+	private static int gray(float brightness) {
+		int channel = ARGB.as8BitChannel(brightness);
+		return ARGB.color(channel, channel, channel);
 	}
 	
 }
